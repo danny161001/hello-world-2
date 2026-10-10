@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drumlane GAA Raffle</title>
+<style>
+  :root { --green: #0a7d3b; --dark: #064d25; --white: #ffffff; }
+  body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--green), var(--dark)); font-family: Arial, sans-serif; overflow: hidden; }
+  section { display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center;
+    color: var(--white); padding: 20px; }
+  section.hidden { display: none; }
+  h1 { font-size: 2.6rem; margin: 0; }
+  .prize { font-size: 3.2rem; font-weight: bold; background: var(--white); color: var(--green);
+    padding: 6px 28px; border-radius: 16px; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 50% { transform: scale(1.12); } }
+  .tickets { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  button { padding: 14px 32px; font-size: 1.1rem; border: 3px solid var(--white); border-radius: 16px;
+    background: var(--white); color: var(--green); cursor: pointer; transition: transform 0.2s, background 0.2s, color 0.2s; }
+  button:hover { transform: scale(1.1); background: var(--green); color: var(--white); }
+  .tickets button { display: flex; flex-direction: column; min-width: 120px; }
+  .tickets b { font-size: 1.8rem; }
+  #thanks h1 { animation: bounce 0.6s ease; }
+  @keyframes bounce { 50% { transform: translateY(-60px) rotate(3deg); } }
+  .dot { position: absolute; top: 40px; width: 20px; height: 20px; border-radius: 50%; background: var(--white); }
+</style>
+</head>
+<body>
+  <section id="preface">
+    <h1>Drumlane GAA Raffle</h1>
+    <p>Enter for your chance to win</p>
+    <div class="prize">€10,000</div>
+    <div class="tickets">
+      <button data-n="1" data-p="1"><b>1</b> ticket<br>€1</button>
+      <button data-n="5" data-p="5"><b>5</b> tickets<br>€5</button>
+      <button data-n="10" data-p="10"><b>10</b> tickets<br>€10</button>
+    </div>
+  </section>
+
+  <section id="thanks" class="hidden">
+    <h1>Thank you for entering!</h1>
+    <p id="msg"></p>
+    <p>Up Drumlane! Returning to the raffle...</p>
+  </section>
+  <div class="dot" id="dot"></div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    // Choose a ticket pack, say thank you, then revert to the raffle screen
+    document.querySelectorAll(".tickets button").forEach(b => b.onclick = () => {
+      $("msg").textContent = `You entered with ${b.dataset.n} ticket(s) for €${b.dataset.p}. Good luck!`;
+      $("preface").classList.add("hidden");
+      $("thanks").classList.remove("hidden");
+      setTimeout(() => {
+        $("thanks").classList.add("hidden");
+        $("preface").classList.remove("hidden");
+      }, 4000);
+    });
+    // Continuous movement: a dot bouncing across the screen
+    let x = 0, speed = 3;
+    (function move() {
+      x += speed;
+      if (x > innerWidth - 20 || x < 0) speed *= -1;
+      $("dot").style.left = x + "px";
+      requestAnimationFrame(move);
+    })();
+  </script>
+</body>
+</html>
